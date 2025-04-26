@@ -1,0 +1,404 @@
+openapi: 3.0.3
+info:
+  title: Booksy API
+  version: 1.0.0
+tags:
+  - name: inventory
+    description: The inventory API (administration)
+  - name: storefront
+    description: The Storefront API
+  - name: purchase
+    description: The Purchase API
+  - name: customers
+    description: The Customer API
+paths:
+  /books:
+    get:
+      summary: Get all available books
+      tags:
+        - storefront
+      responses:
+        '200':
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /inventory/books:
+    post:
+      summary: Add a new book
+      tags:
+        - inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCreateRequest'
+      responses:
+        '201':
+          description: Book created
+        '400':
+          description: Validation errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /inventory/books/{status}:
+    get:
+      summary: Get all books by status
+      tags:
+        - inventory
+      parameters:
+        - name: status
+          in: path
+          description: status of the books to fetch
+          required: true
+          schema:
+            type: string
+            enum: [ ACTIVE, TO_BE_REMOVED ]
+      responses:
+        '200':
+          description: List of books by status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /inventory/books/{bookId}:
+    put:
+      summary: Update existing book
+      tags:
+        - inventory
+      parameters:
+        - name: bookId
+          in: path
+          description: ID of the book to delete
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: 456
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookUpdateRequest'
+      responses:
+        '200':
+          description: Book updated
+        '400':
+          description: Validation errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+    delete:
+      summary: Delete existing book
+      tags:
+        - inventory
+      parameters:
+        - name: bookId
+          in: path
+          description: ID of the book to delete
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: 456
+      responses:
+        '200':
+          description: Book deleted
+        '400':
+          description: Validation errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /purchase/preview:
+    post:
+      summary: Preview the price, discounts, and loyalty points for a purchase
+      tags:
+        - purchase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseRequest'
+      responses:
+        '200':
+          description: Purchase preview calculated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchasePreviewResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /purchase:
+    post:
+      summary: Purchase one or more books
+      tags:
+        - purchase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseRequest'
+      responses:
+        '200':
+          description: Purchase successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseResponse'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /customers/{customerId}/loyalty:
+    get:
+      summary: Get loyalty points for a customer
+      tags:
+        - customers
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Loyalty point count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoyaltyResponse'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+components:
+  schemas:
+    BookCreateRequest:
+      type: object
+      properties:
+        isbn:
+          type: string
+        title:
+          type: string
+        basePrice:
+          type: number
+          format: double
+        bookType:
+          type: string
+          enum: [NEW_RELEASE, REGULAR, OLD_EDITION]
+        stock:
+          type: integer
+      required: [isbn, title, basePrice, bookType, stock]
+
+    BookUpdateRequest:
+      type: object
+      properties:
+        isbn:
+          type: string
+        title:
+          type: string
+        basePrice:
+          type: number
+          format: double
+        bookType:
+          type: string
+          enum: [NEW_RELEASE, REGULAR, OLD_EDITION]
+        status:
+          type: string
+          enum: [ ACTIVE, TO_BE_REMOVED ]
+        stock:
+          type: integer
+      required: [isbn, title, basePrice, bookType, stock]
+
+    BookResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        isbn:
+          type: string
+        title:
+          type: string
+        basePrice:
+          type: number
+          format: double
+        bookType:
+          type: string
+          enum: [NEW_RELEASE, REGULAR, OLD_EDITION]
+        status:
+          type: string
+          enum: [ ACTIVE, TO_BE_REMOVED ]
+        stock:
+          type: integer
+
+    PurchaseRequest:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        bookIds:
+          type: array
+          items:
+            type: integer
+      required: [customerId, bookIds]
+
+    PurchasePreviewResponse:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        totalPrice:
+          type: number
+          format: double
+        discountApplied:
+          type: number
+          format: double
+        loyaltyPointsEarned:
+          type: integer
+        loyaltyRewardApplied:
+          type: boolean
+      required: [customerId, totalPrice, discountApplied, loyaltyPointsEarned, loyaltyRewardApplied]
+
+    PurchaseResponse:
+      type: object
+      properties:
+        purchaseId:
+          type: integer
+        totalPrice:
+          type: number
+          format: double
+        loyaltyPointsEarned:
+          type: integer
+
+    LoyaltyResponse:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        loyaltyPoints:
+          type: integer
+
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        status:
+          type: integer
+        timestamp:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            type: string
+
+
