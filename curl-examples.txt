@@ -1,0 +1,43 @@
+#list all active books
+curl -X GET "http://localhost:8080/books" -H "accept: application/json"
+
+#fetch books by status:
+curl -X GET "http://localhost:8080/inventory/books/ACTIVE" -H "accept: application/json"
+curl -X GET "http://localhost:8080/inventory/books/TO_BE_REMOVED" -H "accept: application/json"
+
+#preview purchase
+curl -X POST "http://localhost:8080/purchase/preview" -H "Content-Type: application/json" -d '{
+  "customerId": 1,
+  "bookIds": [1,2]
+}'
+
+#confirm purchase
+curl -X POST "http://localhost:8080/purchase" -H "Content-Type: application/json" -d '{
+  "customerId": 1,
+  "bookIds": [1,2]
+}'
+
+#check customer loyalty points
+curl -X GET "http://localhost:8080/customers/1/loyalty" -H "accept: application/json"
+
+#add book to inventory:
+curl -X POST "http://localhost:8080/inventory/books" -H "Content-Type: application/json" -d '{
+  "isbn": "9789999999999",
+  "title": "New Book Example",
+  "basePrice": 39.99,
+  "bookType": "REGULAR",
+  "stock": 20
+}'
+
+#update book :
+curl -X PUT "http://localhost:8080/inventory/books/1" -H "Content-Type: application/json" -d '{
+  "isbn": "9780000000001",
+  "title": "Modern Java (Limited)",
+  "basePrice": 59.99,
+  "bookType": "NEW_RELEASE",
+  "bookStatus": "ACTIVE",
+  "stock": 50
+}'
+
+#delete book:
+curl -X DELETE "http://localhost:8080/inventory/books/5" -H "accept: application/json"
