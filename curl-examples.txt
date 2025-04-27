@@ -14,7 +14,9 @@ curl -X POST "http://localhost:8080/purchase/preview" -H "Content-Type: applicat
 #confirm purchase
 curl -X POST "http://localhost:8080/purchase" -H "Content-Type: application/json" -d '{
   "customerId": 1,
-  "bookIds": [1,2]
+  "bookIds": [1,2,3],
+  "agreedTotalPrice" : 92.17,
+  "loyaltyRewardApplied": false
 }'
 
 #check customer loyalty points

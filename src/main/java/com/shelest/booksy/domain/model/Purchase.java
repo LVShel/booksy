@@ -38,6 +38,7 @@ public class Purchase {
     @ManyToOne(optional = false)
     private Customer customer;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "purchase_books",

@@ -191,7 +191,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PurchaseRequest'
+              $ref: '#/components/schemas/PurchasePreviewRequest'
       responses:
         '200':
           description: Purchase preview calculated successfully
@@ -347,7 +347,23 @@ components:
           type: array
           items:
             type: integer
-      required: [customerId, bookIds]
+        agreedTotalPrice:
+          type: number
+          format: double
+        loyaltyRewardApplied:
+          type: boolean
+      required: [customerId, bookIds, agreedTotalPrice, loyaltyRewardApplied]
+
+    PurchasePreviewRequest:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        bookIds:
+          type: array
+          items:
+            type: integer
+      required: [ customerId, bookIds ]
 
     PurchasePreviewResponse:
       type: object

@@ -1,6 +1,7 @@
 package com.shelest.booksy.web.controller;
 
 import com.shelest.booksy.domain.dto.PurchasePreviewResponse;
+import com.shelest.booksy.domain.dto.PurchasePreviewRequest;
 import com.shelest.booksy.domain.dto.PurchaseRequest;
 import com.shelest.booksy.domain.dto.PurchaseResponse;
 import com.shelest.booksy.service.PurchaseService;
@@ -20,7 +21,7 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @PostMapping("/preview")
-    public ResponseEntity<PurchasePreviewResponse> preview(@RequestBody @Valid PurchaseRequest request) {
+    public ResponseEntity<PurchasePreviewResponse> preview(@RequestBody @Valid PurchasePreviewRequest request) {
         return ResponseEntity.ok(purchaseService.preview(request));
     }
 

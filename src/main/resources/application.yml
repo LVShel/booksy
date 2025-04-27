@@ -18,3 +18,8 @@ spring:
   sql:
     init:
       mode: always
+
+booksy:
+  loyalty:
+    loyaltyEnabled: true
+    maxWithdrawThreshold: 10

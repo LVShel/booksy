@@ -1,9 +1,10 @@
 -- Customers
 INSERT INTO customers (id, name, loyalty_points)
 VALUES (1, 'John Doe', 0),
-       (2, 'Bob Builder', 5);
+       (2, 'Bob Builder', 5),
+       (3, 'John Snow ', 9);
 
-ALTER TABLE customers ALTER COLUMN id RESTART WITH 3;
+ALTER TABLE customers ALTER COLUMN id RESTART WITH 4;
 
 -- Books
 INSERT INTO books (id, isbn, title, base_price, book_type, stock, created_at, status)

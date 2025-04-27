@@ -1,5 +1,6 @@
 package com.shelest.booksy.web.exception;
 
+import com.shelest.booksy.service.exception.PurchaseInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +23,12 @@ public class RestExceptionHandler {
     public ResponseEntity<ApiError> handleBadRequest(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiError("Invalid parameter", ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(PurchaseInvalidException.class)
+    public ResponseEntity<ApiError> handleInvalidPurchase(PurchaseInvalidException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiError("Invalid purchase", ex.getMessage(), HttpStatus.CONFLICT.value()));
     }
 
     @ExceptionHandler(Exception.class)
