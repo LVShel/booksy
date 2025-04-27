@@ -1,4 +1,4 @@
-# Booksy ? - Online Bookstore Backend
+# Booksy - Online Bookstore Backend
 
 Welcome to **Booksy**, a simple REST API for managing a bookstore inventory, purchases, and customer loyalty points.
 
