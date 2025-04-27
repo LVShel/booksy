@@ -7,6 +7,7 @@ import com.shelest.booksy.domain.model.Book;
 import com.shelest.booksy.domain.model.enumeration.BookStatus;
 import com.shelest.booksy.domain.repository.BookRepository;
 import com.shelest.booksy.service.BookService;
+import com.shelest.booksy.service.exception.DuplicateBookException;
 import com.shelest.booksy.service.mapper.BookMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,6 +26,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void create(BookCreateRequest request) {
+        final Optional<Book> bookByIsbn = bookRepository.findByIsbn(request.getIsbn());
+        if (bookByIsbn.isPresent()) {
+            throw new DuplicateBookException("Book already exists with isbn: " + request.getIsbn());
+        }
         log.info("Creating new book with ISBN: {}", request.getIsbn());
         bookRepository.save(BookMapper.toEntity(request));
     }
